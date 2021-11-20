@@ -1,21 +1,40 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Text, View, Button, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios'
 
 export default function LoginScreen({ onAuthChange }) {
 
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
+    const [disabledLogin, setDisabledLogin] = useState(true)
 
+    // FIELD VALIDATION USE EFFECT HOOK
     useEffect(() => {
-        console.log(user, password)
+        if (user != "" && password != "" && password.length >= 6) {
+            setDisabledLogin(false)
+        } else {
+            setDisabledLogin(true)
+        }
     }, [user, password])
 
-    const fakeLogin = useCallback(event => {
-        onAuthChange(true)
+    // FUNCTION FOR CHANGING NAVIGARION'S AUTH STATE WHEN LOGGING IN
+    const changeAuthState = useCallback((state) => {
+        onAuthChange(state)
     }, [onAuthChange])
 
-    const login = () => {
-        console.log('login')
+    // FUNCTION FOR LOGIN REQUEST
+    const login = async () => {
+        axios.post("https://app-river.herokuapp.com/login", { user: user, password: password })
+            .then(async (response) => {
+                if (response.status === 200) {
+                    await AsyncStorage.setItem('TOKEN', response.data.token)
+                    changeAuthState(true)
+                }
+            })
+            .catch(error => {
+                Alert.alert("Error", error.response.data.message, [{ text: "OK" }]) //NOT AVAILABLE ON WEB
+            });
     }
 
     return (
@@ -31,50 +50,59 @@ export default function LoginScreen({ onAuthChange }) {
             <TextInput
                 style={styles.inputText}
                 textContentType="password"
-                secureTextEntry="true"
+                secureTextEntry={true}
                 placeholder="Password"
                 placeholderTextColor="gray"
                 onChangeText={text => setPassword(text)}
             />
-            <TouchableOpacity style={styles.loginButton} onPress={login}>
+            <TouchableOpacity disabled={disabledLogin} style={disabledLogin ? styles.disabledLoginButton : styles.loginButton} onPress={login}>
                 <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
-            {/* <Button title="Fake login" onPress={fakeLogin} /> */}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     inputView: {
-        margin: "auto",
-        marginTop: "1em",
+        alignSelf: "center",
+        marginTop: 25,
         width: "80%",
         backgroundColor: "#dddddd",
         borderRadius: 25,
-        padding: "1em"
+        padding: 25
     },
     title: {
         fontWeight: "bold",
         fontSize: 30,
         color: "#38B6FF",
-        textAlign: "center"
+        textAlign: "center",
+        marginBottom: 20
     },
     inputText: {
         height: 50,
         color: "black",
-        margin: "1em",
+        margin: 10,
         backgroundColor: "#cccccc",
         borderRadius: 25,
-        padding: "0.5em"
+        padding: 10
     },
     loginButton: {
-        margin: "auto",
-        marginTop: "1em",
+        alignSelf: "center",
         alignItems: "center",
+        marginTop: 20,
         borderRadius: 25,
-        padding: "0.75em",
+        padding: 10,
         width: "50%",
         backgroundColor: "#38B6FF"
+    },
+    disabledLoginButton: {
+        alignSelf: "center",
+        alignItems: "center",
+        marginTop: 20,
+        borderRadius: 25,
+        padding: 10,
+        width: "50%",
+        backgroundColor: "darkgray"
     },
     loginText: {
         color: "white"

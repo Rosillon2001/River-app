@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import { Text, View, Button } from 'react-native';
 import { useSelector } from "react-redux";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen({ onAuthChange }) {
 
@@ -10,14 +11,19 @@ export default function ProfileScreen({ onAuthChange }) {
         console.log(user)
     }, []);
 
-    const fakeLogout = useCallback(event => {
-        onAuthChange(false)
+    const changeAuthState = useCallback((state) => {
+        onAuthChange(state)
     }, [onAuthChange])
+
+    const logout = async () => {
+        await AsyncStorage.removeItem('TOKEN')
+        changeAuthState(false)
+    }
 
     return (
         <View>
             <Text>Profile</Text>
-            <Button title="Fake logout" onPress={fakeLogout} />
+            <Button title="Logout" onPress={logout} />
         </View>
     );
 }
