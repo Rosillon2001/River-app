@@ -26,7 +26,7 @@ export default function HomeScreen() {
     return (
         <View>
             <Text>Home</Text>
-            <Button onPress={storeUser}>Redux store example</Button>
+            <Button title="Redux store example" onPress={storeUser}/>
         </View>
     );
 }
