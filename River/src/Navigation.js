@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 
 export default function Navigation() {
 
-    const auth = false
+    const [auth, setAuth] = useState(false);
 
     return (
         <NavigationContainer>
@@ -40,12 +40,16 @@ export default function Navigation() {
                     }>
                     <Tab.Screen name="Home" component={HomeScreen} />
                     <Tab.Screen name="Explore" component={ExploreScreen} />
-                    <Tab.Screen name="Profile" component={ProfileScreen} />
+                    <Tab.Screen name="Profile">
+                        {() => <ProfileScreen onAuthChange={setAuth}/>}
+                    </Tab.Screen>
                 </Tab.Navigator>
             ) : (
                 <Stack.Navigator>
                     <Stack.Screen name="Register" component={RegisterScreen} />
-                    <Stack.Screen name="Login" component={LoginScreen} />
+                    <Stack.Screen name="Login">
+                        {() => <LoginScreen onAuthChange={setAuth}/>}
+                    </Stack.Screen>
                 </Stack.Navigator>
             )}
         </NavigationContainer>
