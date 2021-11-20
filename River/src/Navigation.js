@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import HomeScreen from "./screens/HomeScreen";
 import ExploreScreen from "./screens/ExploreScreen";
@@ -17,6 +18,15 @@ const Stack = createStackNavigator();
 export default function Navigation() {
 
     const [auth, setAuth] = useState(false);
+
+    useEffect(() => {
+        readToken()
+    }, [])
+
+    const readToken = async () => {
+        const token = await AsyncStorage.getItem('TOKEN')
+        setAuth(!!token)
+    }
 
     return (
         <NavigationContainer>
@@ -41,14 +51,14 @@ export default function Navigation() {
                     <Tab.Screen name="Home" component={HomeScreen} />
                     <Tab.Screen name="Explore" component={ExploreScreen} />
                     <Tab.Screen name="Profile">
-                        {() => <ProfileScreen onAuthChange={setAuth}/>}
+                        {() => <ProfileScreen onAuthChange={setAuth} />}
                     </Tab.Screen>
                 </Tab.Navigator>
             ) : (
                 <Stack.Navigator>
                     <Stack.Screen name="Register" component={RegisterScreen} />
                     <Stack.Screen name="Login">
-                        {() => <LoginScreen onAuthChange={setAuth}/>}
+                        {() => <LoginScreen onAuthChange={setAuth} />}
                     </Stack.Screen>
                 </Stack.Navigator>
             )}
