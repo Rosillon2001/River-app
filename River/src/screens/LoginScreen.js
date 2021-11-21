@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Text, View, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, StyleSheet, Alert, ActivityIndicator, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
+import Loading from "../components/Loading";
 
-export default function LoginScreen({ onAuthChange }) {
+export default function LoginScreen({ navigation, onAuthChange }) {
 
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
     const [disabledLogin, setDisabledLogin] = useState(true)
+    const [loading, setLoading] = useState(false)
 
     // FIELD VALIDATION USE EFFECT HOOK
     useEffect(() => {
@@ -25,14 +27,17 @@ export default function LoginScreen({ onAuthChange }) {
 
     // FUNCTION FOR LOGIN REQUEST
     const login = async () => {
+        setLoading(true)
         axios.post("https://app-river.herokuapp.com/login", { user: user, password: password })
             .then(async (response) => {
                 if (response.status === 200) {
+                    setLoading(false)
                     await AsyncStorage.setItem('TOKEN', response.data.token)
                     changeAuthState(true)
                 }
             })
             .catch(error => {
+                setLoading(false)
                 Alert.alert("Error", error.response.data.message, [{ text: "OK" }]) //NOT AVAILABLE ON WEB
             });
     }
@@ -58,6 +63,13 @@ export default function LoginScreen({ onAuthChange }) {
             <TouchableOpacity disabled={disabledLogin} style={disabledLogin ? styles.disabledLoginButton : styles.loginButton} onPress={login}>
                 <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
+
+            <Text style={styles.singUpText}>
+                Don't have an account?
+                <Text style={{color: "#38B6FF"}} onPress={() => navigation.push('Register')}> Sing up!</Text>
+            </Text>
+
+            <Loading activated={loading}/>
         </View>
     );
 }
@@ -89,7 +101,7 @@ const styles = StyleSheet.create({
     loginButton: {
         alignSelf: "center",
         alignItems: "center",
-        marginTop: 20,
+        margin: 20,
         borderRadius: 25,
         padding: 10,
         width: "50%",
@@ -98,7 +110,7 @@ const styles = StyleSheet.create({
     disabledLoginButton: {
         alignSelf: "center",
         alignItems: "center",
-        marginTop: 20,
+        margin: 20,
         borderRadius: 25,
         padding: 10,
         width: "50%",
@@ -106,5 +118,9 @@ const styles = StyleSheet.create({
     },
     loginText: {
         color: "white"
+    },
+    singUpText: {
+        alignSelf: "center",
+        fontSize: 16
     }
 })

@@ -56,10 +56,10 @@ export default function Navigation() {
                 </Tab.Navigator>
             ) : (
                 <Stack.Navigator>
-                    <Stack.Screen name="Register" component={RegisterScreen} />
                     <Stack.Screen name="Login">
-                        {() => <LoginScreen onAuthChange={setAuth} />}
+                        {(props) => <LoginScreen {...props} onAuthChange={setAuth} />}
                     </Stack.Screen>
+                    <Stack.Screen name="Register" component={RegisterScreen} />
                 </Stack.Navigator>
             )}
         </NavigationContainer>
