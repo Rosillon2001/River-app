@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Text, View, TextInput, TouchableOpacity, Button, StyleSheet, Platform, Image } from 'react-native';
+import { ScrollView, Text, View, TextInput, TouchableOpacity, ToastAndroid, StyleSheet, Platform, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Loading from "../components/Loading";
 import LocationPicker from "../components/LocationPicker";
 import ImageInput from "../components/ImageInput";
 import axios from "axios";
 
-export default function RegisterScreen() {
+export default function RegisterScreen({ navigation }) {
 
     const [disabledRegister, setDisabledRegister] = useState(true)
     const [loading, setLoading] = useState(false)
@@ -65,10 +65,13 @@ export default function RegisterScreen() {
             .then(async (response) => {
                 console.log(response.data);
                 setLoading(false)
+                ToastAndroid.show(response.data.message, ToastAndroid.LONG);
+                navigation.goBack();
             })
             .catch(error => {
                 console.log(error.response.data);
                 setLoading(false)
+                ToastAndroid.show(error.response.data.message, ToastAndroid.LONG);
             });
     }
 
