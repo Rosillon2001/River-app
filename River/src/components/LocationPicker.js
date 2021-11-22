@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react';
 import { Picker } from 'react-native';
 
-export default function LocationPicker({ onLocationChange }) {
+export default function LocationPicker({ onLocationChange, location }) {
 
     const changeLocationState = useCallback((state) => {
         onLocationChange(state)
     }, [onLocationChange])
 
     return (
-        <Picker style={{margin: 10, color: "gray"}} onValueChange={(itemValue) => changeLocationState(itemValue)}>
+        <Picker style={{margin: 10, color: "gray"}} onValueChange={(itemValue) => changeLocationState(itemValue)} mode='dropdown' selectedValue={location ? location : ""}>
             <Picker.Item value="" label="Select country" />
             <Picker.Item value="Afghanistan" label="Afghanistan" />
             <Picker.Item value="Åland Islands" label="Åland Islands" />

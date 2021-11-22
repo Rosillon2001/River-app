@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { View, Text, TextInput, Image, StyleSheet } from 'react-native'
+import { View, Text, TextInput, StyleSheet } from 'react-native'
+import { Avatar } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import LocationPicker from "../components/LocationPicker";
 import ImageInput from "../components/ImageInput";
 
-export default function UserForm({ onValidityChange, onDataChange, title }) {
+export default function UserForm({ onValidityChange, onDataChange, title, user }) {
 
     const changeFormValidity = useCallback((state) => {
         onValidityChange(state)
@@ -17,24 +18,26 @@ export default function UserForm({ onValidityChange, onDataChange, title }) {
     const [optionalInfo, setOptionalInfo] = useState(true);
 
     // FORM FIELD HOOKS
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [validEmail, setValidEmail] = useState(false)
+    const [username, setUsername] = useState(user ? user.username : "");
+    const [email, setEmail] = useState(user ? user.email : "");
+    const [validEmail, setValidEmail] = useState(user ? true : false)
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
     // OPTIONAL FORM FIELD HOOKS
-    const [name, setName] = useState("");
-    const [bio, setBio] = useState("");
-    const [location, setLocation] = useState("");
-    const [picture, setPicture] = useState(null);
+    const [name, setName] = useState(user ? user.name : "");
+    const [bio, setBio] = useState(user ? user.bio : "");
+    const [location, setLocation] = useState(user ? user.location : "");
+    const [picture, setPicture] = useState(user ? user.picture : null);
 
     // USE EFFECT FOR ENABLING/DISABLING REGISTER BUTTON
     useEffect(() => {
-        if (username != "" && validEmail && password != "" && password.length >= 6) {
+        if (username != "" && validEmail && password != "" && password.length >= 6 && password === confirmPassword) {
             changeFormValidity(false)
         } else {
             changeFormValidity(true)
         }
-    }, [username, email, password])
+    }, [username, email, password, confirmPassword])
 
     // USE EFFECT FOR CHANGING FORM DATA VALUES
     useEffect(() => {
@@ -66,9 +69,7 @@ export default function UserForm({ onValidityChange, onDataChange, title }) {
         <View>
             <Text style={styles.title}>{title}</Text>
 
-            <View style={{ alignSelf: "center" }}>
-                {picture && <Image source={{ uri: picture }} style={{ width: 200, height: 200, borderRadius: 10 }} />}
-            </View>
+            {picture && <Avatar rounded size="xlarge" source={{ uri: picture }} containerStyle={{ alignSelf: "center" }} />}
 
             <TextInput
                 style={styles.inputText}
@@ -76,6 +77,7 @@ export default function UserForm({ onValidityChange, onDataChange, title }) {
                 placeholder="Username"
                 placeholderTextColor="gray"
                 onChangeText={text => setUsername(text)}
+                value={username}
             />
             <TextInput
                 style={styles.inputText}
@@ -83,6 +85,7 @@ export default function UserForm({ onValidityChange, onDataChange, title }) {
                 placeholder="Email"
                 placeholderTextColor="gray"
                 onChangeText={text => validateEmail(text)}
+                value={email}
             />
             <TextInput
                 style={styles.inputText}
@@ -91,6 +94,14 @@ export default function UserForm({ onValidityChange, onDataChange, title }) {
                 placeholder="Password"
                 placeholderTextColor="gray"
                 onChangeText={text => setPassword(text)}
+            />
+            <TextInput
+                style={styles.inputText}
+                textContentType="password"
+                secureTextEntry={true}
+                placeholder="Confirm password"
+                placeholderTextColor="gray"
+                onChangeText={text => setConfirmPassword(text)}
             />
             <View style={{ borderBottomColor: 'gray', borderBottomWidth: 1, display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
                 <Ionicons name={optionalInfo ? 'chevron-up' : 'chevron-down'} size={20} color='gray' />
@@ -103,6 +114,7 @@ export default function UserForm({ onValidityChange, onDataChange, title }) {
                     placeholder="Name"
                     placeholderTextColor="gray"
                     onChangeText={text => setName(text)}
+                    value={name}
                 />
                 <TextInput
                     style={styles.inputText}
@@ -110,8 +122,9 @@ export default function UserForm({ onValidityChange, onDataChange, title }) {
                     placeholder="Bio"
                     placeholderTextColor="gray"
                     onChangeText={text => setBio(text)}
+                    value={bio}
                 />
-                <LocationPicker onLocationChange={setLocation} />
+                <LocationPicker onLocationChange={setLocation} location={location} />
                 <ImageInput onImageSelected={setPicture} />
             </View>
         </View>
