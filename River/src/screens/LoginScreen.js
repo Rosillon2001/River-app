@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Text, View, TouchableOpacity, TextInput, StyleSheet, Alert, ActivityIndicator, Modal } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, StyleSheet, Alert, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 import Loading from "../components/Loading";
@@ -44,6 +44,7 @@ export default function LoginScreen({ navigation, onAuthChange }) {
 
     return (
         <View style={styles.inputView}>
+            <Image source={require('../../assets/River2.png')} style={{height:75, width:75, alignSelf:'center', borderRadius: 5}}/>
             <Text style={styles.title}>Login</Text>
             <TextInput
                 style={styles.inputText}
@@ -66,10 +67,10 @@ export default function LoginScreen({ navigation, onAuthChange }) {
 
             <Text style={styles.singUpText}>
                 Don't have an account?
-                <Text style={{color: "#38B6FF"}} onPress={() => navigation.push('Register')}> Sing up!</Text>
+                <Text style={{ color: "#38B6FF" }} onPress={() => navigation.push('Register')}> Sing up!</Text>
             </Text>
 
-            <Loading activated={loading}/>
+            <Loading activated={loading} />
         </View>
     );
 }
@@ -86,9 +87,9 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: "bold",
         fontSize: 30,
-        color: "#38B6FF",
+        color: "gray",
         textAlign: "center",
-        marginBottom: 20
+        margin: 10
     },
     inputText: {
         height: 50,

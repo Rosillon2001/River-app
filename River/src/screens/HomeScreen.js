@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, ScrollView, StyleSheet } from 'react-native';
+import { Text, View, ScrollView } from 'react-native';
 import { FAB } from 'react-native-elements';
 
 import { useDispatch } from "react-redux";
@@ -53,9 +53,3 @@ export default function HomeScreen() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    scrollView: {
-        flexGrow: 1
-    }
-})
