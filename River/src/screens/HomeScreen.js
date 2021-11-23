@@ -3,12 +3,12 @@ import { Text, View, ScrollView } from 'react-native';
 import { FAB } from 'react-native-elements';
 
 import { useDispatch } from "react-redux";
-import { setUser } from "../redux/slices/userSlice"
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 
 import ModalContainer from "../components/ModalContainer";
+import { setUser } from "../redux/ducks/user";
 
 export default function HomeScreen() {
 

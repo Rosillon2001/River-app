@@ -21,7 +21,7 @@ const Stack = createStackNavigator();
 export default function Navigation() {
 
     const [auth, setAuth] = useState(false);
-    const user = useSelector(state => state.user);
+    const user = useSelector(state => state.user.user);
 
     useEffect(() => {
         readToken()
@@ -48,7 +48,7 @@ export default function Navigation() {
                                 return <Ionicons name={iconName} size={size} color={color} />
                             }
                             if (route.name === 'Profile') {                                
-                                return <Avatar size={"small"} rounded title={user.username ? user.username.charAt(0) : null} source={{ uri: user.picture }} />
+                                return <Avatar size={"small"} rounded title={user?.username ? user?.username.charAt(0) : null} source={{ uri: user?.picture }} />
                             }
                         },
                         tabBarLabel: () => {
@@ -58,7 +58,7 @@ export default function Navigation() {
                     }>
                     <Tab.Screen name="Home" component={HomeScreen} />
                     <Tab.Screen name="Explore" component={ExploreScreen} />
-                    <Tab.Screen name="Profile" options={{ headerTitle: user.username, headerShadowVisible: false }}>
+                    <Tab.Screen name="Profile" options={{ headerTitle: user?.username ? user?.username : "Profile", headerShadowVisible: false }}>
                         {() => <ProfileScreen onAuthChange={setAuth} />}
                     </Tab.Screen>
                 </Tab.Navigator>
