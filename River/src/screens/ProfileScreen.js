@@ -1,26 +1,31 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { Text, View, ScrollView, Button, TouchableOpacity, StyleSheet, Platform, ToastAndroid } from 'react-native';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from "../components/Loading";
 import { Card, Avatar } from "react-native-elements";
 import ModalContainer from "../components/ModalContainer";
 import UserForm from "../components/UserForm";
 import axios from "axios";
+import { getUser } from "../redux/ducks/user";
 
 export default function ProfileScreen({ onAuthChange }) {
 
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getUser())
+    }, [])
+
     const user = useSelector(state => state.user.user);
+    console.log("profile", user);
+
     const [loading, setLoading] = useState(false)
     const [profileEditModal, setProfileEditModal] = useState(false);
 
     //USER EDIT HOOKS
     const [disableUserUpdate, setDisableUserUpdate] = useState(true);
     const [userEditedData, setUserEditedData] = useState(null);
-
-    useEffect(() => {
-        console.log(user)
-    }, []);
 
     const changeAuthState = useCallback((state) => {
         onAuthChange(state)
@@ -60,6 +65,7 @@ export default function ProfileScreen({ onAuthChange }) {
                 setLoading(false)
                 ToastAndroid.show(response.data.message, ToastAndroid.LONG);
                 setProfileEditModal(false)
+                dispatch(getUser())
             })
             .catch(error => {
                 console.log(error.response.data);

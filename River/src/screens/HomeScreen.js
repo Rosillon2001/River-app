@@ -2,13 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Text, View, ScrollView } from 'react-native';
 import { FAB } from 'react-native-elements';
 
-import { useDispatch } from "react-redux";
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "../redux/ducks/user";
 
 import ModalContainer from "../components/ModalContainer";
-import { setUser } from "../redux/ducks/user";
 
 export default function HomeScreen() {
 
@@ -17,31 +14,11 @@ export default function HomeScreen() {
     const [postModal, setPostModal] = useState(false)
 
     useEffect(() => {
-        getUserData()
+        dispatch(getUser())
     }, [])
 
-    const getUserData = async () => {
-        const token = await AsyncStorage.getItem('TOKEN')
-
-        axios.get("https://app-river.herokuapp.com/user", { headers: { Authorization: `Bearer ${token}` } })
-            .then(async (response) => {
-                const user = {
-                    id: response.data.id,
-                    username: response.data.username,
-                    email: response.data.email,
-                    name: response.data.name,
-                    bio: response.data.bio,
-                    location: response.data.location,
-                    birthDate: response.data.birthDate,
-                    picture: response.data.picture,
-                    dateCreated: response.data.dateCreated
-                }
-                dispatch(setUser(user))
-            })
-            .catch(error => {
-                console.log(error.response.data);
-            });
-    }
+    // const user = useSelector(state => state.user.user);
+    // console.log(user);
 
     return (
         <View style={{ flex: 1 }}>
