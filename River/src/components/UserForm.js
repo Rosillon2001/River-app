@@ -71,6 +71,7 @@ export default function UserForm({ onValidityChange, onDataChange, title, user }
 
             {picture && <Avatar rounded size="xlarge" source={{ uri: picture }} containerStyle={{ alignSelf: "center" }} />}
 
+            <Text style={styles.textLable}>Username</Text>
             <TextInput
                 style={styles.inputText}
                 textContentType="username"
@@ -79,6 +80,7 @@ export default function UserForm({ onValidityChange, onDataChange, title, user }
                 onChangeText={text => setUsername(text)}
                 value={username}
             />
+            <Text style={styles.textLable}>Email address</Text>
             <TextInput
                 style={styles.inputText}
                 textContentType="emailAddress"
@@ -87,6 +89,7 @@ export default function UserForm({ onValidityChange, onDataChange, title, user }
                 onChangeText={text => validateEmail(text)}
                 value={email}
             />
+            <Text style={styles.textLable}>Password</Text>
             <TextInput
                 style={styles.inputText}
                 textContentType="password"
@@ -95,6 +98,7 @@ export default function UserForm({ onValidityChange, onDataChange, title, user }
                 placeholderTextColor="gray"
                 onChangeText={text => setPassword(text)}
             />
+            <Text style={styles.textLable}>Confirm password</Text>
             <TextInput
                 style={styles.inputText}
                 textContentType="password"
@@ -103,11 +107,12 @@ export default function UserForm({ onValidityChange, onDataChange, title, user }
                 placeholderTextColor="gray"
                 onChangeText={text => setConfirmPassword(text)}
             />
-            <View style={{ borderBottomColor: 'gray', borderBottomWidth: 1, display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
+            <View style={styles.optionalInfo}>
                 <Ionicons name={optionalInfo ? 'chevron-up' : 'chevron-down'} size={20} color='gray' />
                 <Text style={{ color: 'gray' }} onPress={() => { setOptionalInfo(!optionalInfo) }}>Optional info</Text>
             </View>
             <View style={optionalInfo ? {} : { display: 'none' }}>
+                <Text style={styles.textLable}>Name</Text>
                 <TextInput
                     style={styles.inputText}
                     textContentType="name"
@@ -116,6 +121,7 @@ export default function UserForm({ onValidityChange, onDataChange, title, user }
                     onChangeText={text => setName(text)}
                     value={name}
                 />
+                <Text style={styles.textLable}>Bio</Text>
                 <TextInput
                     style={styles.inputText}
                     textContentType="none"
@@ -139,12 +145,25 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginBottom: 20
     },
+    textLable: {
+        color: 'gray',
+        marginLeft: 20,
+    },
     inputText: {
         height: 50,
         color: "black",
         margin: 10,
+        marginTop: 5,
         backgroundColor: "#cccccc",
         borderRadius: 25,
         padding: 10
+    },
+    optionalInfo: {
+        borderBottomColor: 'gray',
+        borderBottomWidth: 1,
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'row',
+        margin: 15
     }
 })

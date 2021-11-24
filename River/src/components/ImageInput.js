@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { StyleSheet, Platform, TouchableOpacity, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function ImageInput({ onImageSelected }) {
+export default function ImageInput({ onImageSelected, text }) {
 
     const changeImageSelected = useCallback((state) => {
         onImageSelected(state)
@@ -21,7 +21,7 @@ export default function ImageInput({ onImageSelected }) {
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
@@ -36,7 +36,7 @@ export default function ImageInput({ onImageSelected }) {
 
     return (
         <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-            <Text style={{ color: "gray" }}>Upload profile picture</Text>
+            <Text style={{ color: "gray" }}>{text ? text : "Select picture"}</Text>
         </TouchableOpacity>
     );
 }
