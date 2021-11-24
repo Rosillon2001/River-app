@@ -1,32 +1,32 @@
-import React from "react";
-import { Button, Text, View } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { Text, View, ScrollView } from 'react-native';
+import { FAB } from 'react-native-elements';
 
-import { useDispatch } from "react-redux";
-import { setUser } from "../redux/slices/userSlice"
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "../redux/ducks/user";
+
+import ModalContainer from "../components/ModalContainer";
 
 export default function HomeScreen() {
 
     const dispatch = useDispatch();
 
-    function storeUser() {
-        const user = {
-            id: 4,
-            username: "testUser",
-            email: "test@user.com",
-            name: "Jose",
-            bio: null,
-            location: null,
-            birthDate: "12/02/2001",
-            picture: null,
-            dateCreated: "19/11/2021"
-        }
-        dispatch(setUser(user))
-    }
+    const [postModal, setPostModal] = useState(false)
+
+    useEffect(() => {
+        dispatch(getUser())
+    }, [])
+
+    // const user = useSelector(state => state.user.user);
+    // console.log(user);
 
     return (
-        <View>
-            <Text>Home</Text>
-            <Button title="Redux store example" onPress={storeUser}/>
+        <View style={{ flex: 1 }}>
+            <ScrollView>
+                <Text>Home</Text>
+            </ScrollView>
+            <FAB icon={{ name: 'add', color: 'white' }} color="#5271FF" placement="right" onPress={() => { setPostModal(true) }} />
+            <ModalContainer visible={postModal} onModalClose={setPostModal} />
         </View>
     );
 }
