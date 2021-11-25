@@ -47,8 +47,9 @@ export default function Navigation() {
                                 iconName = focused ? 'search' : 'search-outline'
                                 return <Ionicons name={iconName} size={size} color={color} />
                             }
-                            if (route.name === 'Profile') {                                
-                                return <Avatar size={"small"} rounded title={user?.username ? user?.username.charAt(0) : null} source={{ uri: user?.picture }} />
+                            if (route.name === 'Profile') {
+                                iconName = focused ? 'person' : 'person-outline'               
+                                return user?.picture ? <Avatar size={"small"} rounded source={{ uri: user?.picture }}/> : <Ionicons name={iconName} size={size} color={color} />
                             }
                         },
                         tabBarLabel: () => {

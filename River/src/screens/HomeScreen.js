@@ -2,31 +2,28 @@ import React, { useEffect, useState } from "react";
 import { Text, View, ScrollView } from 'react-native';
 import { FAB } from 'react-native-elements';
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getUser } from "../redux/ducks/user";
 
-import ModalContainer from "../components/ModalContainer";
+import NewPost from "./modals/NewPost";
 
 export default function HomeScreen() {
 
     const dispatch = useDispatch();
 
-    const [postModal, setPostModal] = useState(false)
+    const [newPostModal, setNewPostModal] = useState(false)
 
     useEffect(() => {
         dispatch(getUser())
     }, [])
-
-    // const user = useSelector(state => state.user.user);
-    // console.log(user);
 
     return (
         <View style={{ flex: 1 }}>
             <ScrollView>
                 <Text>Home</Text>
             </ScrollView>
-            <FAB icon={{ name: 'add', color: 'white' }} color="#5271FF" placement="right" onPress={() => { setPostModal(true) }} />
-            <ModalContainer visible={postModal} onModalClose={setPostModal} />
+            <FAB icon={{ name: 'add', color: 'white' }} color="#5271FF" placement="right" onPress={() => { setNewPostModal(true) }} />
+            <NewPost visible={newPostModal} onModalClose={setNewPostModal} />
         </View>
     );
 }
