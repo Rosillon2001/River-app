@@ -48,8 +48,8 @@ export default function Navigation() {
                                 return <Ionicons name={iconName} size={size} color={color} />
                             }
                             if (route.name === 'Profile') {
-                                iconName = focused ? 'person' : 'person-outline'               
-                                return user?.picture ? <Avatar size={"small"} rounded source={{ uri: user?.picture }}/> : <Ionicons name={iconName} size={size} color={color} />
+                                iconName = focused ? 'person' : 'person-outline'
+                                return user?.picture ? <Avatar size={"small"} title={user?.username.charAt(0)} rounded source={{ uri: user?.picture }} /> : <Ionicons name={iconName} size={size} color={color} />
                             }
                         },
                         tabBarLabel: () => {
@@ -58,7 +58,7 @@ export default function Navigation() {
                     })
                     }>
                     <Tab.Screen name="Home" component={HomeScreen} />
-                    <Tab.Screen name="Explore" component={ExploreScreen} />
+                    <Tab.Screen name="Explore" component={ExploreScreen} options={{ headerShadowVisible: false }} />
                     <Tab.Screen name="Profile" options={{ headerTitle: user?.username ? user?.username : "Profile", headerShadowVisible: false }}>
                         {() => <ProfileScreen onAuthChange={setAuth} />}
                     </Tab.Screen>
