@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Text, View, TouchableOpacity, TextInput, StyleSheet, Alert, Image } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, StyleSheet, ToastAndroid, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 import Loading from "../components/Loading";
@@ -38,7 +38,7 @@ export default function LoginScreen({ navigation, onAuthChange }) {
             })
             .catch(error => {
                 setLoading(false)
-                Alert.alert("Error", error.response.data.message, [{ text: "OK" }]) //NOT AVAILABLE ON WEB
+                ToastAndroid.show(error.response.data.message, ToastAndroid.LONG); //NOT AVAILABLE ON WEB
             });
     }
 

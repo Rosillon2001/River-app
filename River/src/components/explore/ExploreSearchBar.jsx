@@ -1,51 +1,31 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ToastAndroid } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { SearchBar } from 'react-native-elements';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { performSearch } from '../../redux/ducks/search';
 
-export default function ExploreSearchBar({ onDataSearch }) {
+export default function ExploreSearchBar() {
+
+    // REDUX HOOKS 
+    const dispatch = useDispatch();
+    const searchSelector = useSelector(state => state.search)
 
     const [keyword, setKeyword] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const changeSearchData = useCallback((data) => {
-        onDataSearch(data)
-    }, [onDataSearch])
+    useEffect(() => {
+        setLoading(true)
+        dispatch(performSearch(keyword))
+    }, [keyword])
 
     useEffect(() => {
-        if (keyword != "") {
-            setLoading(true)
-            axios.get(`https://app-river.herokuapp.com/search/${keyword}`)
-                .then(async (response) => {
-                    data = {
-                        users: response.data.users,
-                        posts: response.data.posts
-                    }
-                    console.log(data.posts);
-                    changeSearchData(data)
-                    setLoading(false)
-                })
-                .catch(error => {
-                    console.log(error);
-                    console.log(error.response.data);
-                    setLoading(false)
-                    ToastAndroid.show(error.response.data.message, ToastAndroid.LONG);
-                });
-        }else{
-            changeSearchData(null)
-        }
-    }, [keyword])
+        setLoading(false)
+    }, [searchSelector])
 
     return (
         <SearchBar
             placeholder="Search"
             onChangeText={setKeyword}
             value={keyword}
-            onCancel={() => {
-                if(!keyword){
-                    changeSearchData(null)
-                }
-            }}
             showLoading
             loadingProps={{
                 animating: loading,

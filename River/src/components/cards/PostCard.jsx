@@ -1,19 +1,64 @@
-import React from "react";
-import { Text, View, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useState } from "react";
+import { Text, View, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, ToastAndroid } from 'react-native';
 import { Card, Avatar, Image } from "react-native-elements";
 import { Ionicons } from '@expo/vector-icons';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import Loading from "../Loading";
+import { performSearch } from "../../redux/ducks/search";
 
 export default function PostCard({ post }) {
 
+    const dispatch = useDispatch();
     const user = useSelector(state => state.user.user);
+    const searchKeyword = useSelector(state => state.search.keyword);
+
+    const [loading, setLoading] = useState(false);
 
     const openUserProfile = () => {
         console.log('Open this profile:', post.userID)
     }
 
-    const deletePost = () => {
-        console.log('delete post', post.id);
+    const confirmPostDeletion = () => {
+
+        // DELETE FUNCTION (API CALL)
+        const deletePost = async () => {
+            setLoading(true)
+            const token = await AsyncStorage.getItem('TOKEN')
+            axios.delete(`https://app-river.herokuapp.com/post/${post.id}`, { headers: { Authorization: `Bearer ${token}` } })
+                .then(async (response) => {
+                    if (response.status === 200) {
+                        dispatch(performSearch(searchKeyword))
+                        setLoading(false)
+                        ToastAndroid.show(response.data.message, ToastAndroid.LONG);
+                    }
+                })
+                .catch(error => {
+                    setLoading(false)
+                    ToastAndroid.show(error.response.data.message, ToastAndroid.LONG);
+                });
+        }
+
+        // CONFIRMATION ALERT
+        Alert.alert(
+            "Delete this post?",
+            "This action cannot be undone.",
+            [
+                {
+                    text: "OK",
+                    onPress: deletePost,
+                    style: "destructive",
+                },
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+            ],
+            {
+                cancelable: true
+            }
+        );
     }
 
     const likePost = () => {
@@ -30,9 +75,10 @@ export default function PostCard({ post }) {
 
     return (
         <Card containerStyle={styles.card}>
+            <Loading activated={loading} />
             {/* USER'S DATA SECTION */}
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity style={{ flexDirection: 'row', alignItems:'center' }} onPress={openUserProfile}>
+                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={openUserProfile}>
                     {/* USER'S PROFILE PICTURE */}
                     <Avatar size='small' rounded title={post.username.charAt(0)} source={{ uri: post.picture }} />
                     {/* USER'S NAME (IF IT HAS) NEXT TO USERNAME */}
@@ -43,7 +89,7 @@ export default function PostCard({ post }) {
                 </TouchableOpacity>
                 {/* DELETE POST BUTTON IF OWNER */}
                 {user.id === post.userID &&
-                    <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={deletePost}>
+                    <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={confirmPostDeletion}>
                         <Ionicons name="trash-bin-outline" size={24} color="gray" />
                     </TouchableOpacity>
                 }
