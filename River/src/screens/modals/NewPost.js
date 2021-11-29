@@ -25,9 +25,11 @@ export default function NewPost({ visible, onModalClose }) {
         const formData = new FormData()
         formData.append('postText', postData.postText)
 
-        if (postData.picture && Platform.OS !== 'web') {
-            let fileType = postData.picture.substring(postData.picture.lastIndexOf(".") + 1);
-            formData.append('images', { uri: postData.picture, name: `photo.${fileType}`, type: `image/${fileType}` })
+        if (postData.pictures && Platform.OS !== 'web') {
+            postData.pictures.map((picture, index) => {
+                let fileType = picture.substring(picture.lastIndexOf(".") + 1);
+                formData.append('images', { uri: picture, name: `photo-${index}.${fileType}`, type: `image/${fileType}` })
+            })
         }
 
         const token = await AsyncStorage.getItem('TOKEN')
