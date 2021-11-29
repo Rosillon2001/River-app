@@ -70,7 +70,7 @@ export default function PostCard({ post }) {
                         <Ionicons name="arrow-redo-outline" size={24} color="gray" />
                         <Text style={{ color: 'gray' }}>{post.repostNumber}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity disabled onPress={openComments}>
+                    <TouchableOpacity onPress={openComments}>
                         <Ionicons name="chatbubble-ellipses-outline" size={24} color="gray" />
                     </TouchableOpacity>
                 </View>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         borderWidth: 0,
         shadowColor: 'transparent',
-        margin: 20,
+        marginBottom: 10,
         padding: 15,
         paddingBottom: 0,
         width: '90%',

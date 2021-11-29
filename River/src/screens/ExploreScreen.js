@@ -9,13 +9,13 @@ export default function ExploreScreen() {
     const [searchData, setSearchData] = useState(null);
 
     return (
-        <View>
+        <>
             <ExploreSearchBar onDataSearch={setSearchData} />
             {searchData ?
                 <SearchResults data={searchData} />
                 :
                 <EmptySearch />
             }
-        </View>
+        </>
     );
 }
