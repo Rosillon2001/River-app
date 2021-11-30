@@ -1,13 +1,13 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, Button } from 'react-native';
 import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from "../components/Loading";
 import { Card, Avatar } from "react-native-elements";
-import { getUser } from "../redux/ducks/user";
+import { getUser, setUser } from "../redux/ducks/user";
 import EditUser from "./modals/EditUser";
 
-export default function ProfileScreen({ onAuthChange }) {
+export default function ProfileScreen() {
 
     const dispatch = useDispatch()
 
@@ -20,14 +20,10 @@ export default function ProfileScreen({ onAuthChange }) {
     const [loading, setLoading] = useState(false)
     const [profileEditModal, setProfileEditModal] = useState(false);
 
-    const changeAuthState = useCallback((state) => {
-        onAuthChange(state)
-    }, [onAuthChange])
-
     const logout = async () => {
         setLoading(true)
         await AsyncStorage.removeItem('TOKEN')
-        changeAuthState(false)
+        dispatch(setUser(undefined))
         setLoading(false)
     }
 

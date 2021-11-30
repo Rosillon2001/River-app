@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ScrollView, Text, TouchableOpacity, ToastAndroid, StyleSheet, Platform } from 'react-native';
 import { Card } from "react-native-elements";
 import Loading from "../components/Loading";
@@ -11,10 +11,6 @@ export default function RegisterScreen({ navigation }) {
     const [loading, setLoading] = useState(false)
 
     const [data, setData] = useState(null);
-
-    useEffect(() => {
-        console.log(data)
-    }, [data])
 
     const register = () => {
         setLoading(true)
