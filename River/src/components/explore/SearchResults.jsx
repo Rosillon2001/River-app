@@ -1,13 +1,29 @@
-import React from "react";
-import { Text, ScrollView, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { Text, ScrollView, StyleSheet, RefreshControl } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
+import { useSelector, useDispatch } from "react-redux";
+import { performSearch } from "../../redux/ducks/search";
 import UserCard from "../cards/UserCard";
 import PostCard from "../cards/PostCard";
 
 export default function SearchResults({ data }) {
 
+    // REDUX HOOKS
+    const dispatch = useDispatch();
+    const searchKeyword = useSelector(state => state.search.keyword)
+
     const Tab = createMaterialTopTabNavigator();
+
+    // REFRESHING USESTATE HOOK
+    const [refreshing, setRefreshing] = useState(false);
+
+    const refreshSearch = () => {
+        dispatch(performSearch(searchKeyword))
+    }
+
+    useEffect(() => {
+        setRefreshing(false)
+    }, [searchKeyword])
 
     return (
         <>
@@ -20,7 +36,7 @@ export default function SearchResults({ data }) {
 
     function Users() {
         return (
-            <ScrollView>
+            <ScrollView refreshControl={<RefreshControl colors={['#5271FF', '#38B6FF', '#5CE1E6']} refreshing={refreshing} onRefresh={refreshSearch} />}>
                 {data.users.length ? (
                     data.users.map((user, index) => {
                         return <UserCard key={index} user={user} />
@@ -35,7 +51,7 @@ export default function SearchResults({ data }) {
 
     function Posts() {
         return (
-            <ScrollView>
+            <ScrollView refreshControl={<RefreshControl colors={['#5271FF', '#38B6FF', '#5CE1E6']} refreshing={refreshing} onRefresh={refreshSearch} />}>
                 {data.posts.length ? (
                     data.posts.map((post, index) => {
                         return <PostCard key={index} post={post} />
