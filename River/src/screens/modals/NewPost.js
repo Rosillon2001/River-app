@@ -6,6 +6,7 @@ import ModalContainer from '../../components/ModalContainer';
 import PostForm from '../../components/PostForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPost } from '../../redux/ducks/post';
+import { getPosts } from '../../redux/ducks/post';
 
 export default function NewPost({ visible, onModalClose }) {
 
@@ -43,6 +44,7 @@ export default function NewPost({ visible, onModalClose }) {
             ToastAndroid.show(postSelector.message, ToastAndroid.LONG)
             if (postSelector.status === 200) {
                 closeModal();
+                dispatch(getPosts())
             }
         }
     }, [postSelector])

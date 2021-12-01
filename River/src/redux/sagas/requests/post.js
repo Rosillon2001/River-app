@@ -12,3 +12,8 @@ export async function requestDeletePost(id) {
 
     return axios.delete(`https://app-river.herokuapp.com/post/${id}`, { headers: { Authorization: `Bearer ${token}` } })
 }
+
+export function requestGetPosts() {
+   
+    return axios.get('https://app-river.herokuapp.com/posts')
+}

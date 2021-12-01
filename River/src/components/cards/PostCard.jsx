@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../Loading";
 import { performSearch } from "../../redux/ducks/search";
 import { deletePost } from "../../redux/ducks/post";
+import { getPosts } from "../../redux/ducks/post";
 
 export default function PostCard({ post }) {
 
@@ -16,8 +17,8 @@ export default function PostCard({ post }) {
 
     const [loading, setLoading] = useState(false);
 
-    const openUserProfile = () => {
-        console.log('Open this profile:', post.userID)
+    const openUserProfile = (userID) => {
+        console.log('Open this profile:', userID)
     }
 
     const confirmPostDeletion = () => {
@@ -51,6 +52,7 @@ export default function PostCard({ post }) {
             ToastAndroid.show(postSelector.message, ToastAndroid.LONG)
             if (postSelector.status === 200) {
                 dispatch(performSearch(searchKeyword))
+                dispatch(getPosts())
             }
         }
     }, [postSelector])
@@ -70,9 +72,16 @@ export default function PostCard({ post }) {
     return (
         <Card containerStyle={styles.card}>
             <Loading activated={loading} />
+            {/*  */}
+            {post.type == 'repost' && 
+                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' , marginBottom: 8, marginLeft: 5}} onPress={() => openUserProfile(post.reposterID)}>
+                    <Ionicons name="arrow-redo" size={14} color="gray" style={{marginRight:3}}/>
+                    <Text style={{color:'gray'}}>{post.reposterUsername} reposteando</Text>
+                </TouchableOpacity>
+            }
             {/* USER'S DATA SECTION */}
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={openUserProfile}>
+                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => openUserProfile(post.userID)}>
                     {/* USER'S PROFILE PICTURE */}
                     <Avatar size='small' rounded title={post.username.charAt(0)} source={{ uri: post.picture }} />
                     {/* USER'S NAME (IF IT HAS) NEXT TO USERNAME */}

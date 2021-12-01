@@ -1,6 +1,6 @@
 import { call, put } from 'redux-saga/effects'
-import { requestCreatePost, requestDeletePost } from '../requests/post'
-import { setResponse } from '../../ducks/post'
+import { requestCreatePost, requestDeletePost, requestGetPosts } from '../requests/post'
+import { setResponse, setPosts } from '../../ducks/post'
 
 export function* handleCreatePost(action) {
     try {
@@ -17,6 +17,16 @@ export function* handleDeletePost(action) {
         const response = yield call(requestDeletePost, action.id)
         const { data } = response
         yield put(setResponse(data.status, data.message))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export function* handleGetPosts() {
+    try{    
+        const response = yield call(requestGetPosts)
+        const { data } = response
+        yield put(setPosts(data))
     } catch (error) {
         console.log(error)
     }
