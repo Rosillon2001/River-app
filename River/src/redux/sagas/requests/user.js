@@ -10,3 +10,15 @@ export async function requestGetUser() {
         headers: { Authorization: `Bearer ${token}` }
     });
 }
+
+export async function requestUpdateUser(formData) {
+    const token = await AsyncStorage.getItem('TOKEN')
+
+    return axios.put("https://app-river.herokuapp.com/user", formData, { headers: { Authorization: `Bearer ${token}` } })
+}
+
+export async function requestDeleteUser() {
+    const token = await AsyncStorage.getItem('TOKEN')
+
+    return axios.delete("https://app-river.herokuapp.com/user", { headers: { Authorization: `Bearer ${token}` } })
+}
