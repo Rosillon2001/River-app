@@ -4,11 +4,11 @@
     "slug": "River",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/River.png",
+    "icon": "./assets/River2.png",
     "splash": {
-      "image": "./assets/River.png",
+      "image": "./assets/River2.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#00000000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,8 +21,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/River2.png",
+        "backgroundColor": "#00000000"
       },
       "package": "io.river.client"
     },
