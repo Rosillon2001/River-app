@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import { Card } from 'react-native-elements';
 import ImageInput from "../components/ImageInput";
 
-export default function PostForm({ onValidityChange, onDataChange, title, post }) {
+export default function PostForm({ onValidityChange, onDataChange, title }) {
 
     const changeFormValidity = useCallback((state) => {
         onValidityChange(state)
@@ -14,8 +14,8 @@ export default function PostForm({ onValidityChange, onDataChange, title, post }
     }, [onDataChange])
 
     // FORM FIELD HOOKS
-    const [postText, setPostText] = useState(post ? post.postText : "");
-    const [picture, setPicture] = useState(post ? post.picture : null);
+    const [postText, setPostText] = useState("");
+    const [pictures, setPictures] = useState([]);
     const [characterCounter, setCharacterCounter] = useState(0);
 
     // USE EFFECT FOR ENABLING/DISABLING POST CREATION/EDIT BUTTON AND CHANGING TEXT CHARACTERS
@@ -32,10 +32,10 @@ export default function PostForm({ onValidityChange, onDataChange, title, post }
     useEffect(() => {
         const data = {
             postText,
-            picture
+            pictures
         }
         changeFormData(data)
-    }, [postText, picture])
+    }, [postText, pictures])
 
     return (
         <View>
@@ -51,18 +51,24 @@ export default function PostForm({ onValidityChange, onDataChange, title, post }
                 onChangeText={text => setPostText(text)}
             />
             <Text style={styles.characterCounter}>{characterCounter}/140</Text>
-            {picture &&
+            {pictures &&
                 <>
-                    <Text style={styles.textLable}>Picture</Text>
-                    <Card containerStyle={styles.previewCard}>
-                        <Image source={{ uri: picture }} style={styles.imagePreview} />
-                        <TouchableOpacity style={styles.button} onPress={() => { setPicture(null) }}>
-                            <Text style={{ color: 'white', textAlign: 'center' }}>Remove</Text>
-                        </TouchableOpacity>
-                    </Card>
+                    <Text style={styles.textLable}>Pictures</Text>
+                    <ScrollView horizontal={pictures.length > 1 ? true : false}>{
+                        pictures.map((picture, index) => {
+                            return (
+                                <Card key={index} containerStyle={styles.previewCard}>
+                                    <Image source={{ uri: picture }} style={styles.imagePreview} />
+                                    <TouchableOpacity style={styles.button} onPress={() => { setPictures(pictures => pictures.filter((item) => item !== picture)) }}>
+                                        <Text style={{ color: 'white', textAlign: 'center' }}>Remove</Text>
+                                    </TouchableOpacity>
+                                </Card>
+                            )
+                        })
+                    }</ScrollView>
                 </>
             }
-            <ImageInput onImageSelected={setPicture} text="Select post picture" />
+            <ImageInput onImageSelected={(uri) => setPictures([...pictures, uri])} text="Select a picture" />
         </View>
     )
 }

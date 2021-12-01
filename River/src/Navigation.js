@@ -3,10 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar } from "react-native-elements";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "./redux/ducks/user";
 
 import HomeScreen from "./screens/HomeScreen";
 import ExploreScreen from "./screens/ExploreScreen";
@@ -20,21 +20,16 @@ const Stack = createStackNavigator();
 
 export default function Navigation() {
 
-    const [auth, setAuth] = useState(false);
+    const dispatch = useDispatch();
     const user = useSelector(state => state.user.user);
 
     useEffect(() => {
-        readToken()
+        dispatch(getUser())
     }, [])
-
-    const readToken = async () => {
-        const token = await AsyncStorage.getItem('TOKEN')
-        setAuth(!!token)
-    }
 
     return (
         <NavigationContainer>
-            {auth ? (
+            {!!user ? (
                 <Tab.Navigator
                     screenOptions={({ route }) => ({
                         tabBarIcon: ({ focused, color, size }) => {
@@ -48,8 +43,8 @@ export default function Navigation() {
                                 return <Ionicons name={iconName} size={size} color={color} />
                             }
                             if (route.name === 'Profile') {
-                                iconName = focused ? 'person' : 'person-outline'               
-                                return user?.picture ? <Avatar size={"small"} rounded source={{ uri: user?.picture }}/> : <Ionicons name={iconName} size={size} color={color} />
+                                iconName = focused ? 'person' : 'person-outline'
+                                return user?.picture ? <Avatar size={"small"} title={user?.username.charAt(0)} rounded source={{ uri: user?.picture }} /> : <Ionicons name={iconName} size={size} color={color} />
                             }
                         },
                         tabBarLabel: () => {
@@ -58,15 +53,13 @@ export default function Navigation() {
                     })
                     }>
                     <Tab.Screen name="Home" component={HomeScreen} />
-                    <Tab.Screen name="Explore" component={ExploreScreen} />
-                    <Tab.Screen name="Profile" options={{ headerTitle: user?.username ? user?.username : "Profile", headerShadowVisible: false }}>
-                        {() => <ProfileScreen onAuthChange={setAuth} />}
-                    </Tab.Screen>
+                    <Tab.Screen name="Explore" component={ExploreScreen} options={{ headerShadowVisible: false }} />
+                    <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerTitle: user?.username ? user?.username : "Profile", headerShadowVisible: false }}/>
                 </Tab.Navigator>
             ) : (
                 <Stack.Navigator>
                     <Stack.Screen name="Login">
-                        {(props) => <LoginScreen {...props} onAuthChange={setAuth} />}
+                        {(props) => <LoginScreen {...props} />}
                     </Stack.Screen>
                     <Stack.Screen name="Register" component={RegisterScreen} />
                 </Stack.Navigator>

@@ -1,10 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Text, View, TouchableOpacity, TextInput, StyleSheet, Alert, Image } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { Text, View, TouchableOpacity, TextInput, StyleSheet, ToastAndroid, Image } from 'react-native';
+import { useDispatch } from "react-redux";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 import Loading from "../components/Loading";
+import { getUser } from "../redux/ducks/user";
 
-export default function LoginScreen({ navigation, onAuthChange }) {
+export default function LoginScreen({ navigation }) {
+
+    const dispatch = useDispatch();
 
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
@@ -20,11 +24,6 @@ export default function LoginScreen({ navigation, onAuthChange }) {
         }
     }, [user, password])
 
-    // FUNCTION FOR CHANGING NAVIGARION'S AUTH STATE WHEN LOGGING IN
-    const changeAuthState = useCallback((state) => {
-        onAuthChange(state)
-    }, [onAuthChange])
-
     // FUNCTION FOR LOGIN REQUEST
     const login = async () => {
         setLoading(true)
@@ -33,18 +32,18 @@ export default function LoginScreen({ navigation, onAuthChange }) {
                 if (response.status === 200) {
                     setLoading(false)
                     await AsyncStorage.setItem('TOKEN', response.data.token)
-                    changeAuthState(true)
+                    dispatch(getUser())
                 }
             })
             .catch(error => {
                 setLoading(false)
-                Alert.alert("Error", error.response.data.message, [{ text: "OK" }]) //NOT AVAILABLE ON WEB
+                ToastAndroid.show(error.response.data.message, ToastAndroid.LONG); //NOT AVAILABLE ON WEB
             });
     }
 
     return (
         <View style={styles.inputView}>
-            <Image source={require('../../assets/River2.png')} style={{height:75, width:75, alignSelf:'center', borderRadius: 5}}/>
+            <Image source={require('../../assets/River2.png')} style={{ height: 75, width: 75, alignSelf: 'center', borderRadius: 5 }} />
             <Text style={styles.title}>Login</Text>
             <TextInput
                 style={styles.inputText}

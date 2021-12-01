@@ -1,13 +1,16 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { ScrollView, TouchableOpacity, Text, ToastAndroid, StyleSheet, Platform } from 'react-native';
 import { Card } from 'react-native-elements';
 import Loading from '../../components/Loading';
 import ModalContainer from '../../components/ModalContainer';
 import PostForm from '../../components/PostForm';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { createPost } from '../../redux/ducks/post';
 
 export default function NewPost({ visible, onModalClose }) {
+
+    const dispatch = useDispatch();
+    const postSelector = useSelector(state => state.post)
 
     const closeModal = useCallback(() => {
         onModalClose(false)
@@ -19,31 +22,30 @@ export default function NewPost({ visible, onModalClose }) {
     const [disableButton, setDisableButton] = useState(true);
     const [postData, setPostData] = useState(null);
 
-    const createPost = async () => {
+    const createNewPost = async () => {
         setLoading(true)
-
+        // BUILD FORMDATA
         const formData = new FormData()
         formData.append('postText', postData.postText)
-
-        if (postData.picture && Platform.OS !== 'web') {
-            let fileType = postData.picture.substring(postData.picture.lastIndexOf(".") + 1);
-            formData.append('images', { uri: postData.picture, name: `photo.${fileType}`, type: `image/${fileType}` })
-        }
-
-        const token = await AsyncStorage.getItem('TOKEN')
-        axios.post('https://app-river.herokuapp.com/post', formData, { headers: { Authorization: `Bearer ${token}` } })
-            .then(async (response) => {
-                console.log(response.data);
-                setLoading(false)
-                ToastAndroid.show(response.data.message, ToastAndroid.LONG);
-                closeModal()
+        if (postData.pictures && Platform.OS !== 'web') {
+            postData.pictures.map((picture, index) => {
+                let fileType = picture.substring(picture.lastIndexOf(".") + 1);
+                formData.append('images', { uri: picture, name: `photo-${index}.${fileType}`, type: `image/${fileType}` })
             })
-            .catch(error => {
-                console.log(error.response.data);
-                setLoading(false)
-                ToastAndroid.show(error.response.data.message, ToastAndroid.LONG);
-            });
+        }
+        // DISPATCH CREATION ACTION
+        dispatch(createPost(formData))
     }
+
+    useEffect(() => {
+        if (postSelector.status && loading) {
+            setLoading(false)
+            ToastAndroid.show(postSelector.message, ToastAndroid.LONG)
+            if (postSelector.status === 200) {
+                closeModal();
+            }
+        }
+    }, [postSelector])
 
     return (
         <>
@@ -55,7 +57,7 @@ export default function NewPost({ visible, onModalClose }) {
                     <ScrollView>
                         <Card containerStyle={styles.card}>
                             <PostForm onDataChange={setPostData} onValidityChange={setDisableButton} title="New post" />
-                            <TouchableOpacity disabled={disableButton} style={disableButton ? styles.disabledButton : styles.button} onPress={createPost}>
+                            <TouchableOpacity disabled={disableButton} style={disableButton ? styles.disabledButton : styles.button} onPress={createNewPost}>
                                 <Text style={{ color: "white" }}>Create post</Text>
                             </TouchableOpacity>
                         </Card>

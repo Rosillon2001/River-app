@@ -1,18 +1,19 @@
 import React, { useEffect, useCallback, useState } from "react";
-import { Text, ScrollView, TouchableOpacity, StyleSheet, Platform, ToastAndroid } from 'react-native';
+import { Text, ScrollView, TouchableOpacity, StyleSheet, Platform, ToastAndroid, Alert } from 'react-native';
 import { useSelector, useDispatch } from "react-redux";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from "../../components/Loading";
 import { Card } from "react-native-elements";
 import ModalContainer from "../../components/ModalContainer";
 import UserForm from "../../components/UserForm";
-import axios from "axios";
-import { getUser } from "../../redux/ducks/user";
+import { deleteUser, getUser, updateUser } from "../../redux/ducks/user";
 
 export default function EditUser({ visible, onModalClose }) {
 
+    // REDUX HOOKS
     const dispatch = useDispatch()
+    const user = useSelector(state => state.user);
 
+    // GET USER WHEN MOUNTING COMPONENT
     useEffect(() => {
         dispatch(getUser())
     }, [])
@@ -21,17 +22,15 @@ export default function EditUser({ visible, onModalClose }) {
         onModalClose(false)
     }, [onModalClose])
 
-    const user = useSelector(state => state.user.user);
-
     const [loading, setLoading] = useState(false)
 
     //USER EDIT HOOKS
     const [disableUserUpdate, setDisableUserUpdate] = useState(true);
     const [userEditedData, setUserEditedData] = useState(null);
 
-    const updateUser = async () => {
+    const performUpdateUser = async () => {
         setLoading(true)
-
+        // BUILD FORMDATA
         let formData = new FormData()
         formData.append('username', userEditedData.username)
         formData.append('email', userEditedData.email)
@@ -45,23 +44,45 @@ export default function EditUser({ visible, onModalClose }) {
             let fileType = userEditedData.picture.substring(userEditedData.picture.lastIndexOf(".") + 1);
             formData.append('picture', { uri: userEditedData.picture, name: `photo.${fileType}`, type: `image/${fileType}` })
         }
-
-        const token = await AsyncStorage.getItem('TOKEN')
-
-        axios.put("https://app-river.herokuapp.com/user", formData, { headers: { Authorization: `Bearer ${token}` } })
-            .then(async (response) => {
-                console.log(response.data);
-                setLoading(false)
-                ToastAndroid.show(response.data.message, ToastAndroid.LONG);
-                dispatch(getUser())
-                closeModal()
-            })
-            .catch(error => {
-                console.log(error.response.data);
-                setLoading(false)
-                ToastAndroid.show(error.response.data.message, ToastAndroid.LONG);
-            });
+        // DISPATCH USER UPDATE ACTION
+        dispatch(updateUser(formData))
     }
+
+    const confirmUserDeletion = () => {
+        // CONFIRMATION ALERT
+        Alert.alert(
+            "Delete user?",
+            "This action cannot be undone.",
+            [
+                {
+                    text: "OK",
+                    onPress: () => {
+                        setLoading(true)
+                        dispatch(deleteUser())
+                    },
+                    style: "destructive",
+                },
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+            ],
+            {
+                cancelable: true
+            }
+        );
+    }
+
+    // USEEFFECT FOR CHECKING USER UPDATE STATE
+    useEffect(() => {
+        if (user.status && loading) {
+            setLoading(false)
+            ToastAndroid.show(user.message, ToastAndroid.LONG)
+            if (user.status === 200) {
+                closeModal()
+            }
+        }
+    }, [user])
 
     return (
         <>
@@ -73,9 +94,12 @@ export default function EditUser({ visible, onModalClose }) {
                 Component={
                     <ScrollView>
                         <Card containerStyle={styles.updateUserCard}>
-                            <UserForm onDataChange={setUserEditedData} onValidityChange={setDisableUserUpdate} title="Update user" user={user} />
-                            <TouchableOpacity disabled={disableUserUpdate} style={disableUserUpdate ? styles.disabledButton : styles.button} onPress={updateUser}>
+                            <UserForm onDataChange={setUserEditedData} onValidityChange={setDisableUserUpdate} title="Update user" user={user.user} />
+                            <TouchableOpacity disabled={disableUserUpdate} style={disableUserUpdate ? styles.disabledButton : styles.button} onPress={performUpdateUser}>
                                 <Text style={{ color: "white" }}>Update user</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.dangerButton} onPress={confirmUserDeletion}>
+                                <Text style={{ color: "white" }}>Delete user</Text>
                             </TouchableOpacity>
                         </Card>
                     </ScrollView>
@@ -112,5 +136,14 @@ const styles = StyleSheet.create({
         padding: 10,
         width: "50%",
         backgroundColor: "darkgray"
+    },
+    dangerButton: {
+        alignSelf: "center",
+        alignItems: "center",
+        marginBottom: 20,
+        borderRadius: 25,
+        padding: 10,
+        width: "50%",
+        backgroundColor: "#eb445a"
     }
 })

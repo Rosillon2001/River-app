@@ -69,7 +69,7 @@ export default function UserForm({ onValidityChange, onDataChange, title, user }
         <View>
             <Text style={styles.title}>{title}</Text>
 
-            {picture && <Avatar rounded size="xlarge" source={{ uri: picture }} containerStyle={{ alignSelf: "center" }} />}
+            {picture && <Avatar rounded size="xlarge" title={username.charAt(0)} source={{ uri: picture }} containerStyle={{ alignSelf: "center" }} />}
 
             <Text style={styles.textLable}>Username</Text>
             <TextInput
