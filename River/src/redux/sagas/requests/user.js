@@ -22,3 +22,9 @@ export async function requestDeleteUser() {
 
     return axios.delete("https://app-river.herokuapp.com/user", { headers: { Authorization: `Bearer ${token}` } })
 }
+
+export async function requestGetUserPosts() {
+    const token = await AsyncStorage.getItem('TOKEN')
+
+    return axios.get("https://app-river.herokuapp.com/post", { headers: { Authorization: `Bearer ${token}` } })
+}

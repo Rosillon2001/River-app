@@ -7,6 +7,7 @@ import Loading from "../Loading";
 import Comments from "../../screens/modals/Comments";
 import { performSearch } from "../../redux/ducks/search";
 import { getPosts, deletePost, likePost, repost } from "../../redux/ducks/post";
+import { getUserPosts } from "../../redux/ducks/user";
 
 export default function PostCard({ post }) {
 
@@ -54,6 +55,7 @@ export default function PostCard({ post }) {
             if (postSelector.status === 200) {
                 dispatch(performSearch(searchKeyword))
                 dispatch(getPosts())
+                dispatch(getUserPosts())
             }
         }
     }, [postSelector])

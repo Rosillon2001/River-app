@@ -8,7 +8,7 @@
     "splash": {
       "image": "./assets/River.png",
       "resizeMode": "contain",
-      "backgroundColor": "#00000000"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,8 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/River.png",
-        "backgroundColor": "#00000000"
+        "foregroundImage": "./assets/River.png"
       },
       "package": "io.river.client"
     },

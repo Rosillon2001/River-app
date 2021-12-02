@@ -7,6 +7,7 @@ import PostForm from '../../components/PostForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPost } from '../../redux/ducks/post';
 import { getPosts } from '../../redux/ducks/post';
+import { getUserPosts } from '../../redux/ducks/user';
 
 export default function NewPost({ visible, onModalClose }) {
 
@@ -45,6 +46,7 @@ export default function NewPost({ visible, onModalClose }) {
             if (postSelector.status === 200) {
                 closeModal();
                 dispatch(getPosts())
+                dispatch(getUserPosts())
             }
         }
     }, [postSelector])
