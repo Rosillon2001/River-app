@@ -2,8 +2,8 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { View, Text, TextInput, StyleSheet } from 'react-native'
 import { Avatar } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
-import LocationPicker from "../components/LocationPicker";
-import ImageInput from "../components/ImageInput";
+import LocationPicker from "./LocationPicker";
+import ImageInput from "./ImageInput";
 
 export default function UserForm({ onValidityChange, onDataChange, title, user }) {
 
