@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import { Card } from 'react-native-elements';
-import ImageInput from "../components/ImageInput";
+import ImageInput from "./ImageInput";
 
 export default function PostForm({ onValidityChange, onDataChange, title }) {
 
