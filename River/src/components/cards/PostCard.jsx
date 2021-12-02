@@ -4,6 +4,7 @@ import { Card, Avatar, Image } from "react-native-elements";
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../Loading";
+import Comments from "../../screens/modals/Comments";
 import { performSearch } from "../../redux/ducks/search";
 import { getPosts, deletePost, likePost, repost } from "../../redux/ducks/post";
 
@@ -15,6 +16,7 @@ export default function PostCard({ post }) {
     const postSelector = useSelector(state => state.post)
 
     const [loading, setLoading] = useState(false);
+    const [commentsModal, setCommentsModal] = useState(false);
 
     const openUserProfile = (userID) => {
         console.log('Open this profile:', userID)
@@ -67,12 +69,13 @@ export default function PostCard({ post }) {
     }
 
     const openComments = () => {
-        console.log('Open post comments:', post.id)
+        setCommentsModal(true)
     }
 
     return (
         <Card containerStyle={styles.card}>
             <Loading activated={loading} />
+            <Comments visible={commentsModal} onModalClose={setCommentsModal} post={post} />
             {/* REPOST INFORMATION */}
             {post.type == 'repost' && 
                 <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' , marginBottom: 8, marginLeft: 5}} onPress={() => openUserProfile(post.reposterID)}>

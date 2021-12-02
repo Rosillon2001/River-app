@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, ScrollView } from 'react-native';
+import { View } from 'react-native';
 import { FAB } from 'react-native-elements';
+import { Ionicons } from '@expo/vector-icons';
 
 import { useDispatch } from "react-redux";
 import { getUser } from "../redux/ducks/user";
@@ -25,7 +26,7 @@ export default function HomeScreen() {
     return (
         <View style={{ flex: 1 }}>
             <HomePosts totalPosts={postsData?.totalPosts}/>
-            <FAB icon={{ name: 'add', color: 'white' }} color="#5271FF" placement="right" onPress={() => { setNewPostModal(true) }} />
+            <FAB icon={<Ionicons name="create-outline" size={22} color="white" />} color="#5271FF" placement="right" onPress={() => { setNewPostModal(true) }} />
             <NewPost visible={newPostModal} onModalClose={setNewPostModal} />
         </View>
     );

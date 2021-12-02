@@ -4,11 +4,13 @@ import { watcherSaga } from "./sagas/rootSaga";
 import userReducer from "./ducks/user"
 import searchReducer from "./ducks/search"
 import postReducer from "./ducks/post"
+import commentReducer from "./ducks/comment"
 
 const reducer = combineReducers({
     user: userReducer,
     search: searchReducer,
-    post: postReducer
+    post: postReducer,
+    comment: commentReducer
 })
 
 const sagaMiddleware = createSagaMiddleware()
