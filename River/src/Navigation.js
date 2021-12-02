@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import { Avatar } from "react-native-elements";
+import { Image } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./redux/ducks/user";
@@ -49,10 +50,15 @@ export default function Navigation() {
                         },
                         tabBarLabel: () => {
                             return null
+                        },
+                        headerLeft: () => {
+                            if (route.name === 'Home') {
+                                return <Image source={require('../assets/River.png')} style={{ height: 35, width: 35, alignSelf: 'center', marginLeft: 20 }} />
+                            }
                         }
                     })
                     }>
-                    <Tab.Screen name="Home" component={HomeScreen} />
+                    <Tab.Screen name="Home" component={HomeScreen} options={{ headerShadowVisible: false, headerTitle: 'River'}} />
                     <Tab.Screen name="Explore" component={ExploreScreen} options={{ headerShadowVisible: false }} />
                     <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerTitle: user?.username ? user?.username : "Profile", headerShadowVisible: false }}/>
                 </Tab.Navigator>

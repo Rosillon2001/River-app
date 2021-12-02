@@ -12,3 +12,20 @@ export async function requestDeletePost(id) {
 
     return axios.delete(`https://app-river.herokuapp.com/post/${id}`, { headers: { Authorization: `Bearer ${token}` } })
 }
+
+export function requestGetPosts() {
+   
+    return axios.get('https://app-river.herokuapp.com/posts')
+}
+
+export async function requestLikePost(id) {
+    const token = await AsyncStorage.getItem('TOKEN')
+
+    return axios.post(`https://app-river.herokuapp.com/like/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } })
+}
+
+export async function requestRepost(id) {
+    const token = await AsyncStorage.getItem('TOKEN')
+
+    return axios.post(`https://app-river.herokuapp.com/repost/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } })
+}
