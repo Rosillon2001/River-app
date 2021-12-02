@@ -1,6 +1,6 @@
 import { call, put } from 'redux-saga/effects'
-import { setResponse, setUser, getUser } from '../../ducks/user'
-import { requestDeleteUser, requestGetUser, requestUpdateUser } from '../requests/user'
+import { setResponse, setUser, getUser, setUserPosts } from '../../ducks/user'
+import { requestDeleteUser, requestGetUser, requestUpdateUser, requestGetUserPosts } from '../requests/user'
 
 export function* handleGetUser(action) {
     try {
@@ -34,5 +34,15 @@ export function* handleDeleteUser() {
     } catch (error) {
         console.log(error)
         yield put(getUser())
+    }
+}
+
+export function* handleGetUserPosts() {
+    try {
+        const response = yield call(requestGetUserPosts)
+        const { data } = response
+        yield put(setUserPosts(data.totalPosts))
+    } catch (error) {
+        console.log(error)
     }
 }
