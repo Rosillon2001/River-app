@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import { Avatar } from "react-native-elements";
-import { Image } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./redux/ducks/user";
@@ -12,6 +12,7 @@ import { getUser } from "./redux/ducks/user";
 import HomeScreen from "./screens/HomeScreen";
 import ExploreScreen from "./screens/ExploreScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import ManageProfile from "./components/profile/ManageProfile";
 
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -27,6 +28,8 @@ export default function Navigation() {
     useEffect(() => {
         dispatch(getUser())
     }, [])
+
+    const [manageProfile, setManageProfile] = useState(false);
 
     return (
         <NavigationContainer>
@@ -55,12 +58,24 @@ export default function Navigation() {
                             if (route.name === 'Home') {
                                 return <Image source={require('../assets/River.png')} style={{ height: 35, width: 35, alignSelf: 'center', marginLeft: 20 }} />
                             }
+                        },
+                        headerRight: () => {
+                            if (route.name === 'Profile') {
+                                return (
+                                    <>
+                                        <TouchableOpacity>
+                                            <Ionicons name="ellipsis-vertical" size={24} color="black" style={{ marginRight: 10 }} onPress={() => setManageProfile(true)} />
+                                        </TouchableOpacity>
+                                        <ManageProfile visible={manageProfile} onClose={setManageProfile} />
+                                    </>
+                                )
+                            }
                         }
                     })
                     }>
-                    <Tab.Screen name="Home" component={HomeScreen} options={{ headerShadowVisible: false, headerTitle: 'River'}} />
+                    <Tab.Screen name="Home" component={HomeScreen} options={{ headerShadowVisible: false, headerTitle: 'River' }} />
                     <Tab.Screen name="Explore" component={ExploreScreen} options={{ headerShadowVisible: false }} />
-                    <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerTitle: user?.username ? user?.username : "Profile", headerShadowVisible: false }}/>
+                    <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerTitle: user?.username ? user?.username : "Profile", headerShadowVisible: false }} />
                 </Tab.Navigator>
             ) : (
                 <Stack.Navigator>
