@@ -89,7 +89,7 @@ export default function PostCard({ post }) {
                 {post.type == 'repost' && 
                     <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' , marginBottom: 8, marginLeft: 5}} onPress={() => openUserProfile(post.reposterID)}>
                         <Ionicons name="arrow-redo" size={14} color="gray" style={{marginRight:3}}/>
-                        <Text style={{color:'gray'}}>{post.reposterUsername} reposteando</Text>
+                        <Text style={{color:'gray'}}>{post.reposterUsername} reposting</Text>
                     </TouchableOpacity>
                 }
                 {/* USER'S DATA SECTION */}

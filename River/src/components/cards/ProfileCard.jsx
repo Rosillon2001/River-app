@@ -23,7 +23,7 @@ export default function ProfileCard({ user }) {
                 <View style={styles.statsView}>
                     <View style={styles.statView}>
                         <Text>Posts</Text>
-                        <Text style={styles.statNumber}>10</Text>
+                        <Text style={styles.statNumber}>{user?.postsNumber}</Text>
                     </View>
                     <View style={styles.statView}>
                         <Text>Followers</Text>

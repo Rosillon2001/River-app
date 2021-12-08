@@ -18,6 +18,12 @@ export function requestGetPosts() {
     return axios.get('https://app-river.herokuapp.com/posts')
 }
 
+export async function requestGetFeed() {
+    const token = await AsyncStorage.getItem('TOKEN')
+
+    return axios.get('https://app-river.herokuapp.com/feed', { headers: { Authorization: `Bearer ${token}` } })
+}
+
 export async function requestLikePost(id) {
     const token = await AsyncStorage.getItem('TOKEN')
 

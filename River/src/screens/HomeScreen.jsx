@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { useDispatch } from "react-redux";
 import { getUser } from "../redux/ducks/user";
-import { getPosts } from "../redux/ducks/post"
+import { getPosts } from "../redux/ducks/post";
 import { useSelector } from "react-redux";
 import HomePosts from "../components/homepage/HomePosts";
 
@@ -15,6 +15,7 @@ export default function HomeScreen() {
 
     const dispatch = useDispatch();
     const postsData = useSelector(state => state.post.data)
+
     const [newPostModal, setNewPostModal] = useState(false)
 
     useEffect(() => {
@@ -22,12 +23,12 @@ export default function HomeScreen() {
         dispatch(getPosts())
     }, [])
 
-
     return (
         <View style={{ flex: 1 }}>
-            <HomePosts totalPosts={postsData?.totalPosts}/>
+            <HomePosts totalPosts={postsData?.totalPosts} /> 
             <FAB icon={<Ionicons name="create-outline" size={22} color="white" />} color="#5271FF" placement="right" onPress={() => { setNewPostModal(true) }} />
             <NewPost visible={newPostModal} onModalClose={setNewPostModal} />
         </View>
     );
 }
+
