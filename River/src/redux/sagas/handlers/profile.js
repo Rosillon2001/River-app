@@ -1,6 +1,7 @@
 import { call, put } from 'redux-saga/effects'
-import { setProfile } from '../../ducks/profile'
-import { requestGetProfile } from '../requests/profile'
+import { getProfile, setProfile, setResponse } from '../../ducks/profile'
+import { getUser } from '../../ducks/user'
+import { requestFollow, requestGetProfile } from '../requests/profile'
 
 export function* handleGetProfile(action) {
     try {
@@ -10,5 +11,17 @@ export function* handleGetProfile(action) {
     } catch (error) {
         console.log(error)
         yield put(setProfile(undefined, undefined))
+    }
+}
+
+export function* handleFollow(action) {
+    try {
+        const response = yield call(requestFollow, action.id)
+        const { data } = response
+        yield put(setResponse(data.status, data.message))
+        yield put(getUser())
+        yield put(getProfile(action.id))
+    } catch (error) {
+        console.log(error)
     }
 }

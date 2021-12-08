@@ -7,8 +7,8 @@ import { CREATE_POST, DELETE_POST, GET_POSTS, LIKE_POST, REPOST } from "../ducks
 import { handleCreatePost, handleDeletePost, handleGetPosts, handleLikePosts, handleRepost } from "./handlers/post";
 import { CREATE_COMMENT, DELETE_COMMENT, GET_POST_COMMENTS } from "../ducks/comment";
 import { handleCreateComment, handleDeleteComment, handleGetPostComments } from "./handlers/comment";
-import { GET_PROFILE } from "../ducks/profile";
-import { handleGetProfile } from "./handlers/profile"
+import { FOLLOW, GET_PROFILE } from "../ducks/profile";
+import { handleFollow, handleGetProfile } from "./handlers/profile"
 
 export function* watcherSaga() {
     yield takeLatest(GET_USER, handleGetUser)
@@ -25,4 +25,5 @@ export function* watcherSaga() {
     yield takeLatest(CREATE_COMMENT, handleCreateComment)
     yield takeLatest(DELETE_COMMENT, handleDeleteComment)
     yield takeLatest(GET_PROFILE, handleGetProfile)
+    yield takeLatest(FOLLOW, handleFollow)
 }

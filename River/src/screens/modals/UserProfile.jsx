@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, Text, RefreshControl, StyleSheet } from 'react-native';
+import { ScrollView, Text, RefreshControl } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfile, setProfile } from '../../redux/ducks/profile'
 import Loading from '../../components/Loading';
@@ -12,11 +12,8 @@ export default function UserProfile({ visible, onModalClose, id }) {
 
     const dispatch = useDispatch();
     const profileSelector = useSelector(state => state.profile)
-    const user = useSelector(state => state.user.user)
 
-    console.log(profileSelector)
-
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
     const closeModal = useCallback(() => {
@@ -25,8 +22,8 @@ export default function UserProfile({ visible, onModalClose, id }) {
 
     useEffect(() => {
         if (visible) {
-            setLoading(true)
             dispatch(setProfile(undefined))
+            setLoading(true)
             dispatch(getProfile(id))
         }
     }, [visible]);
@@ -50,7 +47,7 @@ export default function UserProfile({ visible, onModalClose, id }) {
                 title="Profile"
                 Component={
                     <>
-                        <ScrollView refreshControl={<RefreshControl colors={['#5271FF', '#38B6FF', '#5CE1E6']} refreshing={refreshing} onRefresh={refreshProfile} />}>
+                        <ScrollView style={{backgroundColor:'#eeeeee'}} refreshControl={<RefreshControl colors={['#5271FF', '#38B6FF', '#5CE1E6']} refreshing={refreshing} onRefresh={refreshProfile} />}>
                            <ProfileCard user={profileSelector.profile}/>
                            {profileSelector.posts?.length ? (
                                 profileSelector.posts.map((post, index) => {
@@ -67,12 +64,3 @@ export default function UserProfile({ visible, onModalClose, id }) {
         </>
     )
 }
-
-const styles = StyleSheet.create({
-    noCommentsText: {
-        alignSelf: 'center',
-        fontSize: 24,
-        color: 'gray',
-        margin: 20
-    }
-})

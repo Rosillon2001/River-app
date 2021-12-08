@@ -96,7 +96,7 @@ export default function PostCard({ post }) {
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => openUserProfile(post.userID)}>
                         {/* USER'S PROFILE PICTURE */}
-                        <Avatar size='small' rounded title={post.username.charAt(0)} source={{ uri: post.picture }} />
+                        <Avatar containerStyle={{ borderWidth: 1, borderColor: '#cccccc' }} titleStyle={{ marginBottom: 2, color: 'gray' }} size='small' rounded title={post.username.charAt(0)} source={post.picture ? { uri: post.picture } : null} />
                         {/* USER'S NAME (IF IT HAS) NEXT TO USERNAME */}
                         <View style={{ flexDirection: 'row' }}>
                             {post.name && <Text style={styles.name}>{post.name}</Text>}

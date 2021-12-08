@@ -48,7 +48,7 @@ export default function Navigation() {
                             }
                             if (route.name === 'Profile') {
                                 iconName = focused ? 'person' : 'person-outline'
-                                return user?.picture ? <Avatar size={"small"} title={user?.username.charAt(0)} rounded source={{ uri: user?.picture }} /> : <Ionicons name={iconName} size={size} color={color} />
+                                return <Avatar containerStyle={{ borderWidth: 1, borderColor: '#cccccc' }} titleStyle={{ marginBottom: 2, color: 'gray' }} size='small' rounded title={user.username.charAt(0)} source={user?.picture ? { uri: user?.picture } : null} />
                             }
                         },
                         tabBarLabel: () => {

@@ -1,17 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Avatar } from 'react-native-elements';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { follow } from '../../redux/ducks/profile';
 
 export default function ProfileCard({ user }) {
 
+    const dispatch = useDispatch();
     const userSelector = useSelector(state => state.user.user)
 
     return (
         <View style={styles.profileContainer}>
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: '50%' }}>
-                    <Avatar rounded size="large" title={user?.username.charAt(0)} source={{ uri: user?.picture }} />
+                    <Avatar containerStyle={{ borderWidth: 1, borderColor: '#cccccc' }} titleStyle={{ marginBottom: 5, color: 'gray' }} rounded size="large" title={user?.username.charAt(0)} source={ user?.picture ? { uri: user?.picture } : null} />
                     <Text style={{ fontSize: 24 }}>{user?.name ? user?.name : user?.username}</Text>
                     <Text style={{ fontSize: 16, color: 'gray' }}>{user?.email}</Text>
                     {user?.location &&
@@ -39,8 +41,8 @@ export default function ProfileCard({ user }) {
                 </View>
             }
             {userSelector?.id != user?.id && 
-                <TouchableOpacity style={styles.followButton}>
-                    <Text style={{alignSelf:'center', color:'white'}}>Tu mama</Text>
+                <TouchableOpacity style={styles.followButton} onPress={() => dispatch(follow(user?.id))}>
+                    <Text style={{alignSelf:'center', color:'white'}}>{userSelector.follows.includes(user?.id) ? "Unfollow" : "Follow"}</Text>
                 </TouchableOpacity>
             }
         </View>
@@ -65,7 +67,8 @@ const styles = StyleSheet.create({
     statsView: {
         flexDirection: 'row',
         width: '50%',
-        alignItems: 'baseline',
+        alignItems: 'center',
+        marginBottom: 20,
         justifyContent: 'space-around',
     },
     statView: {
@@ -78,6 +81,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#5271FF',
         alignSelf: 'center',
         width: '25%',
-        padding: 10
+        padding: 10,
+        borderRadius: 25,
+        marginTop: 10
     }
 })
