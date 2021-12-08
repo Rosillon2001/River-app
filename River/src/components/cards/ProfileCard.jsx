@@ -1,17 +1,21 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Card, Avatar } from 'react-native-elements';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Avatar } from 'react-native-elements';
+import { useSelector } from 'react-redux';
 
 export default function ProfileCard({ user }) {
+
+    const userSelector = useSelector(state => state.user.user)
+
     return (
         <View style={styles.profileContainer}>
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: '50%' }}>
-                    <Avatar rounded size="large" title={user.username.charAt(0)} source={{ uri: user.picture }} />
-                    <Text style={{ fontSize: 24 }}>{user.name ? user.name : user.username}</Text>
-                    <Text style={{ fontSize: 16, color: 'gray' }}>{user.email}</Text>
-                    {user.location &&
-                        <Text style={{ fontSize: 16, color: 'gray' }}>{user.location}</Text>
+                    <Avatar rounded size="large" title={user?.username.charAt(0)} source={{ uri: user?.picture }} />
+                    <Text style={{ fontSize: 24 }}>{user?.name ? user?.name : user?.username}</Text>
+                    <Text style={{ fontSize: 16, color: 'gray' }}>{user?.email}</Text>
+                    {user?.location &&
+                        <Text style={{ fontSize: 16, color: 'gray' }}>{user?.location}</Text>
                     }
                 </View>
                 <View style={styles.statsView}>
@@ -20,19 +24,24 @@ export default function ProfileCard({ user }) {
                         <Text style={styles.statNumber}>10</Text>
                     </View>
                     <View style={styles.statView}>
-                        <Text>Reposts</Text>
-                        <Text style={styles.statNumber}>5</Text>
+                        <Text>Followers</Text>
+                        <Text style={styles.statNumber}>{user?.followers.length}</Text>
                     </View>
                     <View style={styles.statView}>
-                        <Text>Followers</Text>
-                        <Text style={styles.statNumber}>2</Text>
+                        <Text>Following</Text>
+                        <Text style={styles.statNumber}>{user?.follows.length}</Text>
                     </View>
                 </View>
             </View>
-            {user.bio &&
+            {user?.bio &&
                 <View style={styles.bioView}>
                     <Text style={styles.bioText}>{user.bio}</Text>
                 </View>
+            }
+            {userSelector?.id != user?.id && 
+                <TouchableOpacity style={styles.followButton}>
+                    <Text style={{alignSelf:'center', color:'white'}}>Tu mama</Text>
+                </TouchableOpacity>
             }
         </View>
     )
@@ -64,5 +73,11 @@ const styles = StyleSheet.create({
     },
     statNumber: {
         fontSize: 20
+    }, 
+    followButton: {
+        backgroundColor: '#5271FF',
+        alignSelf: 'center',
+        width: '25%',
+        padding: 10
     }
 })

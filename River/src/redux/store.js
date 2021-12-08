@@ -5,12 +5,14 @@ import userReducer from "./ducks/user"
 import searchReducer from "./ducks/search"
 import postReducer from "./ducks/post"
 import commentReducer from "./ducks/comment"
+import profileReducer from "./ducks/profile"
 
 const reducer = combineReducers({
     user: userReducer,
     search: searchReducer,
     post: postReducer,
-    comment: commentReducer
+    comment: commentReducer,
+    profile : profileReducer
 })
 
 const sagaMiddleware = createSagaMiddleware()
