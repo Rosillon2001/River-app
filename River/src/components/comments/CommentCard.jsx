@@ -48,6 +48,20 @@ export default function CommentCard({ comment, user }) {
         }
     }, [commentSelector]);
 
+    const getRefactoredDate = (date) => {
+        const postDate = new Date(date)
+        const hour = ((postDate.getUTCHours() + 20) % 12 || 12)
+        const minutes = postDate.getUTCMinutes().toString().length == 1 ? '0' + postDate.getUTCMinutes() : postDate.getUTCMinutes()
+        let period;
+        if(hour <= 12){
+            period = 'PM'
+        }else{
+            period = 'AM'
+        }
+
+        return (postDate.toDateString() + ", " + hour + ':' + minutes + " " + period)
+    }
+
     return (
         <>
             <Loading activated={loading} />
@@ -64,6 +78,7 @@ export default function CommentCard({ comment, user }) {
                     }
                 </View>
                 <Text style={styles.textContent}>{comment.content}</Text>
+                <Text style={styles.dateText}>{getRefactoredDate(comment.dateCreated)}</Text>
             </Card>
         </>
     )
@@ -83,5 +98,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
+    },
+    dateText: {
+        marginTop: 5,
+        alignSelf: "flex-end",
+        color: '#aaaaaa',
+        fontSize: 12
     }
 })

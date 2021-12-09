@@ -79,6 +79,20 @@ export default function PostCard({ post }) {
         setCommentsModal(true)
     }
 
+    const getRefactoredDate = (date) => {
+        const postDate = new Date(date)
+        const hour = ((postDate.getUTCHours() + 20) % 12 || 12)
+        const minutes = postDate.getUTCMinutes().toString().length == 1 ? '0' + postDate.getUTCMinutes() : postDate.getUTCMinutes()
+        let period;
+        if(hour <= 12){
+            period = 'PM'
+        }else{
+            period = 'AM'
+        }
+
+        return (postDate.toDateString() + ", " + hour + ':' + minutes + " " + period)
+    }
+
     return (
         <>
         <UserProfile visible={profileModal} onModalClose={setProfileModal} id={profileID}/>
@@ -122,6 +136,7 @@ export default function PostCard({ post }) {
                             })
                         }</ScrollView>
                     }
+                    <Text style={styles.dateText}>{post.type == 'repost' ? getRefactoredDate(post.postDateCreated) : getRefactoredDate(post.dateCreated)}</Text>
                     {/* POST ACTION SECTION (LINE, REPOST, COMMENTS) */}
                     <View style={styles.actionView}>
                         <TouchableOpacity onPress={performLikePost} style={{ flexDirection: 'column', alignItems: 'center' }}>
@@ -178,12 +193,18 @@ const styles = StyleSheet.create({
         marginBottom: 0
     },
     actionView: {
-        marginTop: 15,
+        marginTop: 5,
         paddingTop: 5,
         borderTopColor: 'rgba(0, 0, 0, 0.1)',
         borderTopWidth: 1,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center'
+    },
+    dateText: {
+        marginTop: 5,
+        alignSelf: "flex-end",
+        color: '#aaaaaa',
+        fontSize: 12
     }
 })
